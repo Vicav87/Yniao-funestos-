@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sugestões - União.lol</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+    background: #0f172a;
+      color: white;
+        text-align: center;
+          padding: 40px;
+          }
+
+          .container {
+            max-width: 500px;
+              margin: auto;
+              }
+
+              input, textarea {
+                width: 100%;
+                  padding: 10px;
+                    margin: 10px 0;
+                      border-radius: 8px;
+                        border: none;
+                        }
+
+                        button {
+                          padding: 10px 20px;
+                            background: #22c55e;
+                              border: none;
+                                border-radius: 8px;
+                                  cursor: pointer;
+                                    font-weight: bold;
+                                    }
+
+                                    button:hover {
+                                      background: #16a34a;
+                                      }
+
+                                      .card {
+                                        background: #1e293b;
+                                          padding: 15px;
+                                            border-radius: 10px;
+                                              margin-top: 10px;
+                                              }
+                                              </style>
+                                              </head>
+                                              <body>
+
+                                              <div class="container">
+                                                <h1>Deixe sua sugestão 🚀</h1>
+
+                                                  <input type="text" id="nome" placeholder="Seu nome">
+                                                    <textarea id="mensagem" placeholder="Sua sugestão"></textarea>
+                                                      <button onclick="enviar()">Enviar</button>
+
+                                                        <h2>Sugestões</h2>
+                                                          <div id="lista"></div>
+                                                          </div>
+
+                                                          <script>
+                                                          const supabase = window.supabase.createClient(
+                                                            "https://qahczsbdncbzslarlyhq.supabase.co",
+                                                              "sb_publishable_fSfATBVC_6gakZ30Ug0M3A_SnX5To-p"
+                                                              )
+
+                                                              async function enviar() {
+                                                                const nome = document.getElementById("nome").value
+                                                                  const mensagem = document.getElementById("mensagem").value
+
+                                                                    if (!nome || !mensagem) {
+                                                                        alert("Preencha tudo")
+                                                                            return
+                                                                              }
+
+                                                                                const { error } = await supabase
+                                                                                    .from("Sugst")
+                                                                                        .insert([{ nome, mensagem }])
+
+                                                                                          if (error) {
+                                                                                              alert("Erro ao enviar")
+                                                                                                  console.log(error)
+                                                                                                    } else {
+                                                                                                        alert("Enviado com sucesso 🚀")
+                                                                                                            carregar()
+                                                                                                              }
+                                                                                                              }
+
+                                                                                                              async function carregar() {
+                                                                                                                const { data } = await supabase
+                                                                                                                    .from("Sugst")
+                                                                                                                        .select("*")
+                                                                                                                            .order("created_at", { ascending: false })
+
+                                                                                                                              const lista = document.getElementById("lista")
+                                                                                                                                lista.innerHTML = ""
+
+                                                                                                                                  data.forEach(item => {
+                                                                                                                                      lista.innerHTML += `
+                                                                                                                                            <div class="card">
+                                                                                                                                                    <strong>${item.nome}</strong>
+                                                                                                                                                            <p>${item.mensagem}</p>
+                                                                                                                                                                  </div>
+                                                                                                                                                                      `
+                                                                                                                                                                        })
+                                                                                                                                                                        }
+
+                                                                                                                                                                        carregar()
+                                                                                                                                                                        </script>
+
+                                                                                                                                                                        </body>
+                                                                                                                                                                        </html>
